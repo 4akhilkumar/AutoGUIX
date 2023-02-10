@@ -11,7 +11,7 @@ It uses the PyAutoGUI library. Some of the features of AutoGUIX are listed below
 
 * You can execute the actions based on the window title till the window is active.
 * You can get control over your commands which you want to execute.
-* You can send a SIGINT signal in puTTY.
+* You can send a SIGINT signal in PuTTY.
 * You can close the applications.
 * You can get the window application coordinates.
 * You can open the applications via RUN Dialog Box.
