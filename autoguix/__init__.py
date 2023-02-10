@@ -6,4 +6,4 @@ For feedback, please contact:
 """
 from .autoguix import AUTOGUIX
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
