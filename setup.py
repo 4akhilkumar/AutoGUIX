@@ -26,7 +26,7 @@ setup(
     long_description_content_type="text/markdown",
     license='BSD',
     packages=['AutoGUIX'],
-    keywords="gui automation test testing keyboard click press keystroke control",
+    keywords="gui automation test testing python commands keyboard press keystroke",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
