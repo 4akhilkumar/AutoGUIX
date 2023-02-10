@@ -87,7 +87,7 @@ class AUTOGUIX:
                 pag.keyUp('shift')
             else:
                 pag.press(each_char)
-            time.sleep(0.1)
+            time.sleep(0.01)
 
         if execute_command:
             pag.press('enter')
