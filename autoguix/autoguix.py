@@ -1,22 +1,29 @@
 """
-AutoGUIX is an extended or improved version of PyAutoGUI. Currently, it is only available for Windows Platform.
+AutoGUIX is an extended or improved version of PyAutoGUI.
+Currently, it is only available for Windows Platform.
 """
 import os
 import re
 import time
 try:
     import pyautogui as pag
-except ImportError:
-    raise ImportError('Please install the pyautogui module to use AutoGUIX')
+except ImportError as exc:
+    raise ImportError('Please install the pyautogui module to use AutoGUIX') from exc
 try:
     import pygetwindow as gw
-except ImportError:
-    raise ImportError('Please install the pygetwindow module to use AutoGUIX')
+except ImportError as exc:
+    raise ImportError('Please install the pygetwindow module to use AutoGUIX') from exc
 
+
+class ElementNotFound(Exception):
+    """
+    This exception is raised when the element is not found
+    """
 
 class AUTOGUIX:
     """
-    AutoGUIX is an extended or improved version of PyAutoGUI. Currently, it is only available for Windows Platform.
+    AutoGUIX is an extended or improved version of PyAutoGUI.
+    Currently, it is only available for Windows Platform.
     """
     @classmethod
     def wait_for_window(cls, window_name: str, default_time: int = None):
@@ -44,12 +51,13 @@ class AUTOGUIX:
             end_time = time.time()
             total_time = int(end_time - start_time)
             if total_time >= wait_time:
-                raise Exception(f'The window - {window_name} not found within the limited time!')
+                exception_message = f'The window - {window_name} not found within the limited time!'
+                raise ElementNotFound(exception_message)
 
             try:
                 if window_name in gw.getAllTitles():
                     is_window_found = True
-            except Exception:
+            except ElementNotFound:
                 # No exception will raise as gw.getAllTitles() is a list
                 is_window_found = False
 
@@ -59,14 +67,16 @@ class AUTOGUIX:
             time.sleep(1)
 
     @classmethod
-    def enter_command(cls, command: str, post_wait_time: int = 0, exit_execution: str = None, execute_command: bool = True):
+    def enter_command(cls, command: str, post_wait_time: int = 0,
+        exit_execution: str = None, execute_command: bool = True):
         """
-        This function enters the command and can wait for the specified time and can exit the execution.
-        Useful in case of long running commands.
+        This function enters the command and can wait for the specified time and
+        can exit the execution. Useful in case of long running commands.
 
         Args:
             command (str): The command to be executed
-            post_wait_time (int, optional): The time to wait after the command is executed. Defaults to None.
+            post_wait_time (int, optional): The time to wait after the command is executed.
+                Defaults to None.
             exit_execution (str, optional): The command to exit the execution. Defaults to None.
             Acceptable formats are: STOP_10, STOP_20 etc. where 10 and 20 are the seconds to wait.
             execute_command (bool, optional): The flag to execute the command. Defaults to True.
@@ -104,7 +114,7 @@ class AUTOGUIX:
             if re.match(r'^STOP_\d+$', exit_execution) is None:
                 exit_execution = None
 
-            exit_execution_time = int(exit_execution.split('_')[1]) if exit_execution is not None else None
+            exit_execution_time = int(exit_execution.split('_')[1])
 
             # check the exit_execution_time is less than post_wait_time
             if exit_execution_time is not None and post_wait_time is not None:
@@ -126,7 +136,8 @@ class AUTOGUIX:
 
         Args:
             window_name (str): The window name of the application
-            executable_name (str, optional): The executable name of the application. Defaults to None.
+            executable_name (str, optional): The executable name of the application.
+                Defaults to None.
 
         Returns:
             None or raise an exception if the window is not active
@@ -139,7 +150,7 @@ class AUTOGUIX:
             if executable_name is not None:
                 os.system(f"taskkill /f /im {executable_name}")
         except Exception as error:
-            raise Exception(f"{window_name} is not active to close") from error
+            raise ElementNotFound(f"{window_name} is not active to close") from error
 
     @classmethod
     def get_position(cls, window_name: str):
@@ -164,7 +175,7 @@ class AUTOGUIX:
             }
             return positions
         except Exception as error:
-            raise Exception(f"{window_name} is not active to fetch it's position") from error
+            raise ElementNotFound(f"{window_name} is not active to fetch it's position") from error
 
     @classmethod
     def sigint_signal(cls):
@@ -179,7 +190,8 @@ class AUTOGUIX:
         time.sleep(2)
 
     @classmethod
-    def run_app(cls, app_command: str = None, app_window_name_to_wait: str = None, wait_run_window: bool = True):
+    def run_app(cls, app_command: str = None, app_window_name_to_wait: str = None,
+                wait_run_window: bool = True):
         """
         This function opens the App via Run dialog box
 
