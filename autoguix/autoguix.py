@@ -130,7 +130,7 @@ class AUTOGUIX:
                     break
 
     @classmethod
-    def close_app(cls, window_name: str, executable_name: str = None):
+    def close_app(cls, window_name: str, executable_name: str = None, default_command: bool = True):
         """
         Close the active application
 
@@ -146,7 +146,8 @@ class AUTOGUIX:
             application_obj = gw.getWindowsWithTitle(window_name)[0]
             application_obj.close()
             time.sleep(1)
-            pag.press('enter')
+            if default_command:
+                pag.press('enter')
             if executable_name is not None:
                 os.system(f"taskkill /f /im {executable_name}")
         except Exception as error:
